@@ -24,7 +24,7 @@
 
 </head>
 
-<body class="stretched">
+<body class="stretched" onload="fetch_users()">
 
 	<!-- Document Wrapper
 	============================================= -->
@@ -76,7 +76,9 @@
 					<div class="postcontent">
 
 						<h3>Order Information</h3>
-
+						
+						<h4>Assign Order To:</h4>
+						<select id="userlist"></select><br><br><br>
 						<form>
 							<div class="form-row">
 								<div class="form-group col-md-6">
@@ -131,37 +133,59 @@
 	<script src="js/functions.js"></script>
 
 	<script type="text/javascript">
-	$("button").click(() => {
-		let firstname = document.getElementById('firstname').value
-		let lastname = document.getElementById('lastname').value
-		let phonenumber = document.getElementById('phonenumber').value
-		let cod = document.getElementById('cod').value
-		let address1 = document.getElementById('address1').value
-		let address2 = document.getElementById('address2').value
-		// console.log(firstname)
-		// console.log(lastname)
-		// console.log(cod)
-		// console.log(address1)
-		// console.log(address2)
-		let order = {
-			owner: "billy@gmail.com",
-			customername: firstname + " " + lastname,
-			phonenumber: phonenumber,
-			address: address1 + " " + address2,
-			cod: cod
-		}
-		console.log(order)
-		// $.ajax({
-		// 	url: "localhost:5000/order/create",
-		// 	type: "POST",
-		// 	dataType: "json",
-		// 	contentType: "application/json",
-		// 	success: (result) => {
-		// 		console.log(result)
-		// 	}
-		// 	data: JSON.stringify(order)
-		// })
-	})
+		let serverurl = 'http://149.28.154.120:5000'
+		
+		$("button").click(() => {
+			let owner = document.getElementById('userlist').value
+			let firstname = document.getElementById('firstname').value
+			let lastname = document.getElementById('lastname').value
+			let phonenumber = document.getElementById('phonenumber').value
+			let cod = document.getElementById('cod').value
+			let address1 = document.getElementById('address1').value
+			let address2 = document.getElementById('address2').value
+			// console.log(owner)
+			// console.log(firstname)
+			// console.log(lastname)
+			// console.log(cod)
+			// console.log(address1)
+			// console.log(address2)
+			let order = {
+				owner: owner,
+				customername: firstname + " " + lastname,
+				phonenumber: phonenumber,
+				address: address1 + " " + address2,
+				cod: cod
+			}
+			console.log(order)
+			$.ajax({
+				url: serverurl + "/order/create",
+				type: "POST",
+				dataType: "json",
+				contentType: "application/json",
+				success: (result) => {
+					console.log("save")
+				},
+				data: JSON.stringify(order)
+			})
+		})
+		
+		function fetch_users() {
+			$.ajax({
+				url: serverurl + "/getuser",
+				type: "GET",
+				success: (result) => {
+					// console.log(result)
+					$.each(result, function() {
+						// console.log(this)
+						$("<option />")
+						.attr("value", this.email)
+						.html(this.email)
+						.appendTo("#userlist");
+					})
+				}
+			})
+		}		
+		
 	</script>
 
 </body>
