@@ -76,7 +76,7 @@
 					<div class="postcontent">
 
 						<h3>Order Information</h3>
-						
+
 						<h4>Assign Order To:</h4>
 						<select id="userlist"></select><br><br><br>
 						<form>
@@ -96,6 +96,10 @@
 								<div class="form-group col-md-6">
 									<label for="inputEmail4">Cash On Delivery</label>
 									<input type="email" class="form-control" id="cod" placeholder="COD">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="inputEmail4">Tracking No.</label>
+									<input type="email" class="form-control" id="tracking" placeholder="Tracking No.">
 								</div>
 							</div>
 							<div class="form-group">
@@ -133,8 +137,8 @@
 	<script src="js/functions.js"></script>
 
 	<script type="text/javascript">
-		let serverurl = 'http://149.28.154.120:5000'
-		
+		let serverurl = 'http://localhost:5000'
+
 		$("button").click(() => {
 			let owner = document.getElementById('userlist').value
 			let firstname = document.getElementById('firstname').value
@@ -143,6 +147,7 @@
 			let cod = document.getElementById('cod').value
 			let address1 = document.getElementById('address1').value
 			let address2 = document.getElementById('address2').value
+			let tracking = document.getElementById('tracking').value
 			// console.log(owner)
 			// console.log(firstname)
 			// console.log(lastname)
@@ -154,21 +159,30 @@
 				customername: firstname + " " + lastname,
 				phonenumber: phonenumber,
 				address: address1 + " " + address2,
-				cod: cod
+				cod: cod,
+				tracking: tracking
 			}
-			console.log(order)
-			$.ajax({
-				url: serverurl + "/order/create",
-				type: "POST",
-				dataType: "json",
-				contentType: "application/json",
-				success: (result) => {
-					console.log("save")
-				},
-				data: JSON.stringify(order)
-			})
+			if (order.customername == " " || order.phonenumber == "" || order.address == " ") {
+				alert('Please fill in all the information')
+			} else {
+				$.ajax({
+					url: serverurl + "/order/create",
+					type: "POST",
+					dataType: "json",
+					contentType: "application/json",
+					data: JSON.stringify(order),
+					statusCode: {
+						201: () => {
+							alert('Success')
+						},
+						400: () => {
+							alert('Fail')
+						}
+					}
+				})
+			}
 		})
-		
+
 		function fetch_users() {
 			$.ajax({
 				url: serverurl + "/getuser",
@@ -184,8 +198,8 @@
 					})
 				}
 			})
-		}		
-		
+		}
+
 	</script>
 
 </body>
