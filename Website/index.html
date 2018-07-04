@@ -47,6 +47,13 @@
 						<a href="index.html" class="retina-logo" data-dark-logo="images/logo-dark@2x.png"><img src="images/logo@2x.png" alt="Canvas Logo"></a>
 					</div><!-- #logo end -->
 
+					<!-- Primary Navigation
+					============================================= -->
+					<nav id="primary-menu">
+
+						<ul>
+							<li class="current"><a href="order.html"><div>Order List</div></a></li>
+					</nav><!-- #primary-menu end -->
 
 				</div>
 
@@ -76,7 +83,7 @@
 					<div class="postcontent">
 
 						<h3>Order Information</h3>
-						
+
 						<h4>Assign Order To:</h4>
 						<select id="userlist"></select><br><br><br>
 						<form>
@@ -133,8 +140,8 @@
 	<script src="js/functions.js"></script>
 
 	<script type="text/javascript">
-		let serverurl = 'http://149.28.154.120:5000'
-		
+		let serverurl = 'http://207.148.69.182:5000'
+
 		$("button").click(() => {
 			let owner = document.getElementById('userlist').value
 			let firstname = document.getElementById('firstname').value
@@ -168,7 +175,7 @@
 				data: JSON.stringify(order)
 			})
 		})
-		
+
 		function fetch_users() {
 			$.ajax({
 				url: serverurl + "/getuser",
@@ -184,8 +191,8 @@
 					})
 				}
 			})
-		}		
-		
+		}
+
 	</script>
 
 </body>

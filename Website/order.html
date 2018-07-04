@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="author" content="SemiColonWeb" />
+
+	<!-- Stylesheets
+	============================================= -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Raleway:300,400,500,600,700|Crete+Round:400i" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+	<link rel="stylesheet" href="style.css" type="text/css" />
+	<link rel="stylesheet" href="css/dark.css" type="text/css" />
+	<link rel="stylesheet" href="css/font-icons.css" type="text/css" />
+	<link rel="stylesheet" href="css/animate.css" type="text/css" />
+	<link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
+
+	<link rel="stylesheet" href="css/responsive.css" type="text/css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<!-- Document Title
+	============================================= -->
+	<title>Zucker Admin Site</title>
+
+</head>
+
+<body class="stretched" onload="fetch_orders()">
+
+	<!-- Document Wrapper
+	============================================= -->
+	<div id="wrapper" class="clearfix">
+
+		<!-- Header
+		============================================= -->
+		<header id="header" class="full-header">
+
+			<div id="header-wrap">
+
+				<div class="container clearfix">
+
+					<div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+
+					<!-- Logo
+					============================================= -->
+					<div id="logo">
+						<a href="index.html" class="standard-logo" data-dark-logo="images/logo-dark.png"><img src="images/logo.png" alt="Canvas Logo"></a>
+						<a href="index.html" class="retina-logo" data-dark-logo="images/logo-dark@2x.png"><img src="images/logo@2x.png" alt="Canvas Logo"></a>
+					</div><!-- #logo end -->
+
+					<!-- Primary Navigation
+					============================================= -->
+					<nav id="primary-menu">
+
+						<ul>
+							<li class="current"><a href="order.html"><div>Order List</div></a></li>
+					</nav><!-- #primary-menu end -->
+
+				</div>
+
+			</div>
+
+		</header><!-- #header end -->
+
+		<!-- Page Title
+		============================================= -->
+		<section id="page-title">
+
+			<div class="container clearfix">
+				<h1>All Order</h1>
+				<span>ออเดอรทั้งหมด</span>
+			</div>
+
+		</section><!-- #page-title end -->
+
+		<!-- Content
+		============================================= -->
+		<section id="content">
+
+			<div class="content-wrap">
+
+				<div class="container clearfix">
+
+					<div class="postcontent">
+
+						<h3>All Orders</h3>
+
+            <table id="orderlist" style="width:100%">
+              <tr>
+                <th>Status</th>
+                <th>Owner</th>
+                <th>Customer Name</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>COD</th>
+                <th>Tracking</th>
+                <th>Created Date</th>
+                <th>Deliver Date</th>
+              </tr>
+            </table>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section><!-- #content end -->
+
+	</div><!-- #wrapper end -->
+
+	<!-- Go To Top
+	============================================= -->
+	<div id="gotoTop" class="icon-angle-up"></div>
+
+	<!-- External JavaScripts
+	============================================= -->
+	<script src="js/jquery.js"></script>
+	<script src="js/plugins.js"></script>
+
+	<!-- Footer Scripts
+	============================================= -->
+	<script src="js/functions.js"></script>
+
+	<script type="text/javascript">
+		let serverurl = 'http://207.148.69.182:5000'
+
+    function fetch_orders() {
+			$.ajax({
+				url: serverurl + "/order/getall",
+				type: "GET",
+				success: (result) => {
+          $.each(result, function() {
+            if (this.deliverdate != undefined) {
+              $('#orderlist').append("<tr>" + "<th>" + this.status + "</th>" + "<th>" + this.owner + "</th>" + "<th>" + this.customername + "</th>" + "<th>" + this.phonenumber + "</th>" + "<th>" + this.address + "</th>" + "<th>" + this.cod + "</th>" + "<th>" + this.tracking + "</th>" + "<th>" + this.createddate.substring(0,10) + "</th>" + "<th>" + this.deliverdate.substring(0,10) + "</th>" + "</tr>")
+            } else {
+              $('#orderlist').append("<tr>" + "<th>" + this.status + "</th>" + "<th>" + this.owner + "</th>" + "<th>" + this.customername + "</th>" + "<th>" + this.phonenumber + "</th>" + "<th>" + this.address + "</th>" + "<th>" + this.cod + "</th>" + "<th>" + this.tracking + "</th>" + "<th>" + this.createddate.substring(0,10) + "</th>" + "<th>" + "-" + "</th>" + "</tr>")
+            }
+          })
+				}
+			})
+		}
+
+		$("button").click(() => {
+			let owner = document.getElementById('userlist').value
+			let firstname = document.getElementById('firstname').value
+			let lastname = document.getElementById('lastname').value
+			let phonenumber = document.getElementById('phonenumber').value
+			let cod = document.getElementById('cod').value
+			let address1 = document.getElementById('address1').value
+			let address2 = document.getElementById('address2').value
+			let order = {
+				owner: owner,
+				customername: firstname + " " + lastname,
+				phonenumber: phonenumber,
+				address: address1 + " " + address2,
+				cod: cod
+			}
+			console.log(order)
+			$.ajax({
+				url: serverurl + "/order/create",
+				type: "POST",
+				dataType: "json",
+				contentType: "application/json",
+				success: (result) => {
+					console.log("save")
+				},
+				data: JSON.stringify(order)
+			})
+		})
+	</script>
+
+</body>
+</html>
